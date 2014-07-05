@@ -1,15 +1,17 @@
 /* nap.c */
 #include "header.h"
+#include "extern.h"
 
 #include <sys/time.h>
 
 int nonap = 0;
 
+static void napms(int);
+
 /*
  *	routine to take a nap for n milliseconds
  */
-nap(x)
-int x;
+void nap(int x)
 {
 	if (x<=0 || nonap)
 		return; /* eliminate chance for infinite loop */
@@ -25,8 +27,7 @@ int x;
 RETSIGTYPE nullf(sig)int sig; { }
 
 /*	napms - sleep for time milliseconds - uses setitimer() */
-napms(time)
-int time;
+static void napms(int time)
 {
 	struct itimerval    timeout;
 	RETSIGTYPE     (*oldhandler) ();
@@ -50,8 +51,7 @@ int time;
 #  ifdef HAVE_FTIME
 /*	napms - sleep for time milliseconds - uses ftime() */
 
-napms(time)
-int time;
+static void napms(int time)
 {
 	struct timeb _gtime;
 	time_t matchtime;
@@ -77,10 +77,9 @@ int time;
 #  else /* HAVE_FTIME */
 #    ifdef HZ
 /*	napms - sleep for time milliseconds - uses times() */
-napms(time)
-int time;
+static void napms(int time)
 {
-	long matchclock, times();
+	long matchclock;
 	struct tms stats;
 
 	if (time<=0) 
@@ -92,7 +91,7 @@ int time;
 		;
 }
 #    else
-napms(x) int x; {}
+static void napms(int x) {}
 #    endif /* HZ */
 #  endif /* HAVE_FTIME */
 #endif /* HAVE_SETITIMER */

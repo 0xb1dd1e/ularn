@@ -7,7 +7,7 @@ static char mail600[32];
 static int pid;
 long Taxes;
 
-letter1()
+int letter1(void)
 {
 	int write_len;
 	
@@ -36,7 +36,7 @@ lprcat("\nto your future successful expeditions.\n");
 	return(1);
 }
 
-letter2 ()
+int letter2 (void)
 {
 	int write_len;
 	
@@ -59,7 +59,7 @@ lprcat("\nMay you live in happiness for evermore...\n");
 	return(1);
 }
 
-letter3 ()
+int letter3 (void)
 {
 	int write_len;
 	
@@ -79,7 +79,7 @@ lprcat(" onward, be warned:\nupon our meeting you shall pay the price!\n");
 	return(1);
 }
 
-letter4 ()
+int letter4 (void)
 {
 	int write_len;
 	
@@ -100,7 +100,7 @@ lprcat("\nunleash some of thy wealth upon those who be unfortunate, I,");
 	return(1);
 }
 
-letter5 ()
+int letter5 (void)
 {
 	int write_len;
 	
@@ -123,7 +123,7 @@ lprcat("\ngood food.  Could you possibly find it in your heart to help us");
 	return(1);
 }
 
-letter6 ()
+int letter6 (void)
 {
 	int write_len;
 	
@@ -155,7 +155,7 @@ static int (*pfn[])()= {
 	letter1, letter2, letter3, letter4, letter5, letter6 
 };
 
-mailbill ()
+void mailbill (void)
 {
 	int i, system_rtn;
 	char buf[128];

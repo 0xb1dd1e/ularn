@@ -61,7 +61,7 @@ char *ivendef[] = {
 
 FILE *dfile;
 
-diag()
+void diag(void)
 {
 	int	i, j;
 
@@ -184,14 +184,14 @@ diag()
 /*
 	draw the whole screen
  */
-diagdrawscreen()
+void diagdrawscreen(void)
 {
 	int	i, j, k;
 
 	/* east west walls of this line	*/
 	for (i = 0; i < MAXY; i++) {			
 		for (j = 0; j < MAXX; j++)
-			if (k = mitem[j][i].mon)
+			if ((k = mitem[j][i].mon))
 				fprintf(dfile, "%c", monstnamelist[k]);
 			else
 				fprintf(dfile, "%c", objnamelist[item[j][i]]);

@@ -45,15 +45,17 @@ typedef struct save_buffer {
 } Save_Buffer;
 
 /* private module functions */
-void bwrite(Save_Buffer *save_buffer, char *buf, long num);
-void bread(Save_Buffer *save_buffer, char *buf, long num);
-void fill_buffer(char *fname, Save_Buffer *save_buffer);
-void flush_buffer(char *fname, Save_Buffer *save_buffer);
+static void bwrite(Save_Buffer *save_buffer, char *buf, long num);
+static void bread(Save_Buffer *save_buffer, char *buf, long num);
+static void fill_buffer(char *fname, Save_Buffer *save_buffer);
+static void flush_buffer(char *fname, Save_Buffer *save_buffer);
+
+#define SAVE_BUFSIZ 1024
 
 /*
  *	routine to save the present level into storage
  */
-savelevel()
+void savelevel(void)
 {
 	Saved_Level *storage = saved_levels[level];
 
@@ -69,7 +71,7 @@ savelevel()
 /*
  *	routine to restore a level from storage
  */
-getlevel()
+void getlevel(void)
 {
 	unsigned int i;
 
@@ -102,8 +104,7 @@ getlevel()
 /*
  *	to save the game in a file
  */
-savegame(fname)
-char	*fname;
+int savegame(char *fname)
 {
 	int	i;
 	char genocided; /* To keep save files compatible with old struct monst */
@@ -196,8 +197,7 @@ char	*fname;
 }
 
 
-restoregame(fname)
-char	*fname;
+void restoregame(char *fname)
 {
 	int	i;
 	char genocided; /* To keep save files compatible with old struct monst */
@@ -205,12 +205,12 @@ char	*fname;
 	struct sphere *sp,*splast;
 	Saved_Level * storage;
 	Save_Buffer *save_data;
-	char buf[1024], *tmp="/tmp/UtmpXXXXXX";
+	char buf[SAVE_BUFSIZ], *tmp="/tmp/UtmpXXXXXX";
 
 	printf(" Reading data...");fflush(stdout);
 	if (!(save_data = malloc(sizeof(Save_Buffer)))) died(284);
-	if (!(save_data->data = malloc(1024))) died(284);
-	save_data->data_len = 1024;
+	if (!(save_data->data = malloc(SAVE_BUFSIZ))) died(284);
+	save_data->data_len = SAVE_BUFSIZ;
 	save_data->data_ptr = 0;
 	fill_buffer(fname, save_data);
 	init_cells();
@@ -329,7 +329,7 @@ char	*fname;
 
 /*
 	subroutine to not allow greedy cheaters */
-greedy()
+void greedy(void)
 {
 	if (wizard) 
 		return;
@@ -349,7 +349,7 @@ lprcat("Since you are GREEDY as well as a CHEATER, I cannot allow this game\n");
 	subroutine to not allow altered save files and terminate the attempted
 	restart
  */
-fsorry()
+void fsorry(void)
 {
 	if (cheat) 
 		return;
@@ -364,7 +364,7 @@ fsorry()
 /*
 	subroutine to not allow game if save file can't be deleted
  */
-fcheat()
+void fcheat(void)
 {
 	if (wizard) 
 		return;
@@ -382,7 +382,7 @@ lprcat("is in.  Since this is unfair to the rest of the Ularn community, I\n");
 }
 
 
-init_cells()
+void init_cells(void)
 {
 	int	i;
 
@@ -394,7 +394,7 @@ init_cells()
 }
 
 
-void bwrite(Save_Buffer *save_buffer, char *buf, long num)
+static void bwrite(Save_Buffer *save_buffer, char *buf, long num)
 {
 	int nwrote;
 	static int ncalls = 0;
@@ -411,7 +411,7 @@ void bwrite(Save_Buffer *save_buffer, char *buf, long num)
 	FileSum += sum((unsigned char *)buf, num);
 }
 
-void bread(Save_Buffer *save_buffer, char *buf, long num)
+static void bread(Save_Buffer *save_buffer, char *buf, long num)
 {
 	int nread;
 	static int ncalls = 0;
@@ -429,11 +429,11 @@ void bread(Save_Buffer *save_buffer, char *buf, long num)
 	FileSum += sum((unsigned char *)buf, num);
 }
 
-void fill_buffer(char *fname, Save_Buffer *save_buffer)
+static void fill_buffer(char *fname, Save_Buffer *save_buffer)
 {
 	int fd, err;
 	size_t bytes_read;
-	char buffer[1024];
+	char buffer[SAVE_BUFSIZ];
 
 #ifdef HAVE_LIBZ
 	Byte *compr;
@@ -449,7 +449,7 @@ void fill_buffer(char *fname, Save_Buffer *save_buffer)
 		return;
 	}
 
-	while(bytes_read = read(fd, buffer, 1024)) {
+	while((bytes_read = read(fd, buffer, SAVE_BUFSIZ))) {
 		if (save_buffer->data_len < save_buffer->data_ptr + bytes_read) {
 			save_buffer->data = realloc(save_buffer->data,
 				save_buffer->data_len + bytes_read);
@@ -473,7 +473,7 @@ void fill_buffer(char *fname, Save_Buffer *save_buffer)
 	close(fd);
 }
 
-void flush_buffer(char *fname, Save_Buffer *save_buffer)
+static void flush_buffer(char *fname, Save_Buffer *save_buffer)
 {
 	int fd, err, write_len;
 
@@ -503,10 +503,7 @@ void flush_buffer(char *fname, Save_Buffer *save_buffer)
 	close(fd);
 }
 
-unsigned int
-sum(data, n)
-unsigned char *data;
-int n;
+unsigned int sum(unsigned char *data, int n)
 {
 	unsigned int sum;
 	int c, nb;

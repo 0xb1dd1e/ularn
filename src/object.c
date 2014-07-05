@@ -13,7 +13,7 @@
 	subroutine to look for an object and give the player his options
 	if an object was found.
  */
-lookforobject()
+void lookforobject(void)
 {
 	int i,j;
 
@@ -691,8 +691,7 @@ over:
 /*
 	function to say what object we found and ask if player wants to take it
  */
-finditem(itm)
-int itm;
+void finditem(int itm)
 {
 	int tmp,i;
 	lprintf("\n\nYou find %s",objectname[itm]);
@@ -740,8 +739,7 @@ int itm;
 	subroutine to process the stair cases
 	if dir > 0 then up else down
  */
-ostairs(dir)
-int dir;
+void ostairs(int dir)
 {
 	int x, y;
 
@@ -814,8 +812,7 @@ int dir;
 
 	subroutine to handle a teleport trap +/- 1 level maximum
  */
-oteleport(err)
-int err;
+void oteleport(int err)
 {
 	int tmp;
 
@@ -862,6 +859,7 @@ int err;
 	draws(0,MAXX,0,MAXY); 
 	bot_linex();
 }
+*/
 
 /*
 	*******
@@ -870,8 +868,7 @@ int err;
 
 	function to process a potion
  */
-opotion(pot)
-int pot;
+void opotion(int pot)
 {
 	lprcat("\nDo you (d) drink it, (t) take it"); 
 	iopts();
@@ -898,8 +895,7 @@ int pot;
 /*
 	function to drink a potion
  */
-quaffpotion(pot)
-int pot;
+void quaffpotion(int pot)
 {
 	int i,j;
 	int k;
@@ -1090,8 +1086,7 @@ int pot;
 
 	function to process a magic scroll
  */
-oscroll(typ)
-int typ;
+void oscroll(int typ)
 {
 	lprcat("\nDo you ");
 	if (c[BLINDCOUNT]==0) 
@@ -1143,8 +1138,7 @@ char time_change[] = {
 /*
  *	function to adjust time when time warping and taking courses in school
  */
-adjusttime(tim)
-long tim;
+void adjusttime(long tim)
 {
 	int j;
 
@@ -1161,8 +1155,7 @@ long tim;
 /*
 	function to read a scroll
  */
-read_scroll(typ)
-int typ;
+void read_scroll(int typ)
 {
 	int i,j;
 	if (typ<0 || typ>=MAXSCROLL) 
@@ -1329,7 +1322,7 @@ int typ;
 /*
  *  Cure the player of curses.
  */
-void removecurse ()
+void removecurse (void)
 {
 	int i;
 
@@ -1337,7 +1330,7 @@ void removecurse ()
 		if (c[curse[i]]) c[curse[i]] = 1;
 }
 
-opit()
+void opit(void)
 {
 	int i;
 	if (rnd(101)>81)
@@ -1373,7 +1366,7 @@ opit()
 	}
 }
 
-obottomless()
+void obottomless(void)
 {
 	lprcat("\nYou fell into a pit leading straight to HELL!");  
 	beep(); 
@@ -1382,8 +1375,7 @@ obottomless()
 	died(262);
 }
 
-oelevator(dir)
-int dir;
+void oelevator(int dir)
 {
 	if (dir==1) { 
 		if (level == 0) {
@@ -1414,14 +1406,14 @@ int dir;
 	bot_linex();
 }
 
-ostatue()
+void ostatue(void)
 { }	/* nothing happens when you move on a statue */
 
 
-omirror()
+void omirror(void)
 { }	/* nothing happens when you move on a mirror */
 
-obook()
+void obook(void)
 {
 	lprcat("\nDo you ");
 	if (c[BLINDCOUNT]==0) lprcat("(r) read it, "); 
@@ -1453,8 +1445,7 @@ obook()
 /*
 	function to read a book
  */
-readbook(arg)
-int arg;
+void readbook(int arg)
 {
 	int i,tmp;
 
@@ -1475,9 +1466,9 @@ int arg;
 	}
 }
 
-ocookie()
+void ocookie(void)
 {
-	char *fortune(), *p;
+	char *p;
 
 	lprcat("\nDo you (e) eat it, (t) take it"); 
 	iopts();
@@ -1506,8 +1497,7 @@ ocookie()
 
 
 /* routine to pick up some gold -- if arg==OMAXGOLD then the pile is worth 100* the argument */
-ogold(arg)
-int arg;
+void ogold(int arg)
 {
 	long i;
 
@@ -1523,7 +1513,7 @@ int arg;
 	item[playerx][playery] = know[playerx][playery] = 0;/*destroy gold*/
 }
 
-ohome()
+void ohome(void)
 {
 	int i;
 
@@ -1619,16 +1609,16 @@ ohome()
 }
 
 /*	routine to save program space	*/
-iopts()
+void iopts(void)
 {	
 	lprcat(", or (i) ignore it? ");	
 }
-ignore()
+void ignore(void)
 {	
 	lprcat("ignore.\n");	
 }
 
-closedoor()
+void closedoor(void)
 {
 	int i;
 

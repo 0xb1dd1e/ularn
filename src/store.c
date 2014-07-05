@@ -136,14 +136,14 @@ struct _itm itm[DNDSIZE] =  {
 /*
 	function for the dnd store
  */
-dnd_2hed()
+void dnd_2hed(void)
 {
 lprcat("Welcome to the Ularn Thrift Shoppe.  We stock many items explorers find useful\n");
 lprcat("in their adventures.  Feel free to browse to your heart's content.\n");
 lprcat("Also be advised that if you break 'em, you pay for 'em.");
 }
 
-dnd_hed()
+void dnd_hed(void)
 {
 	int i;
 
@@ -153,7 +153,7 @@ dnd_hed()
 	lprcat("You have ");
 }
 
-dndstore()
+void dndstore(void)
 {
 	int i;
 
@@ -238,19 +238,19 @@ lprcat("comply with the law, we cannot serve you at this time.  So Sorry.\n");
 /*
 	function for the players hands are full
  */
-handsfull()
+void handsfull(void)
 {
 	lprcat("\nYou can't carry anything more!");
 	lflush();
 	nap(2200);
 }
-outofstock()
+void outofstock(void)
 {
 	lprcat("\nSorry, but we are out of that item.");
 	lflush();
 	nap(2200);
 }
-nogold()
+void nogold(void)
 {
 	lprcat("\nYou don't have enough gold to pay for that!");
 	lflush();
@@ -263,8 +263,7 @@ nogold()
 	to print the item list;
 	used in dndstore() enter with the index into itm
 */
-dnditem(i)
-int i;
+void dnditem(int i)
 {
 	int j,k;
 	int x, y;
@@ -302,7 +301,7 @@ char coursetime[] = { 10, 15, 10, 20, 10, 10, 10, 5 };
 /*
 	function to display the header info for the school
  */
-sch_hed()
+void sch_hed(void)
 {
 	clear();
 lprcat("The College of Ularn offers the exciting opportunity of higher education to\n");
@@ -339,7 +338,7 @@ lprcat("all inhabitants of the caves.  Here is the class schedule:\n\n\n");
 	lprcat("You are presently carrying ");
 }
 
-oschool()
+void oschool(void)
 {
 	int i;
 
@@ -470,17 +469,16 @@ oschool()
  *	for the first national bank of Ularn
  */
 long lasttime=0;	/* last time he was in bank */
-obank()
+void obank(void)
 {
 	banktitle("    Welcome to the First National Bank of Ularn.");
 }
-obank2()
+void obank2(void)
 {
 banktitle("Welcome to the 8th-level branch office of the First National Bank of Ularn.");
 }
 
-banktitle(str)
-char *str;
+void banktitle(char *str)
 {
 	nosignal = 1; /* disable signals */
 	clear();
@@ -517,7 +515,7 @@ lprcat("We suggest you go to the LRS office and pay your taxes.\n");
  *	limit of 1 million gold pieces in bank
  */
 #define BANKLIMIT 1000000
-ointerest()
+void ointerest(void)
 {
 	int i;
 
@@ -537,7 +535,7 @@ ointerest()
 static  short gemorder[IVENSIZE]={0};	/* the reference to screen location for each */
 static long gemvalue[IVENSIZE]={0};	/* the appraisal of the gems */
 
-obanksub()
+void obanksub(void)
 {
 	long amt;
 	int i,k, eye=0;
@@ -667,8 +665,7 @@ obanksub()
 	}
 }
 
-appraise(eye, order)
-int eye, order;
+void appraise(int eye, int order)
 {
 	long amt;
 
@@ -703,7 +700,7 @@ int eye, order;
 /*
 	function for the trading post
  */
-otradhead()
+void otradhead(void)
 {
 	clear();
 lprcat("Welcome to the Ularn Trading Post.  We buy items that explorers no longer find\n");
@@ -713,7 +710,7 @@ lprcat("only 20% of their value were they to be new.  If the items are badly\n")
 lprcat("damaged, we will pay only 10% of their new value.\n\n");
 }
 
-otradepost()
+void otradepost(void)
 {
 	int i,j,isub,izarg;
 	long value;
@@ -754,15 +751,14 @@ otradepost()
 			j=1;
 			lprcat("\nYou don't *really* want to sell that, now do you?");
 		}
-		if (!j)
+		if (!j) {
 			if (i=='*') {
 				clear();
 				qshowstr();
 				otradhead();
-			}
-			else  if (iven[isub]==0)
+			} else if (iven[isub]==0) {
 				lprintf("\nYou don't have item %c!",isub+'a');
-			else {
+			} else {
 				for (j=0; j<DNDSIZE; j++)
 					if ((itm[j].obj == iven[isub]) ||
 					    (iven[isub] == ODIAMOND) ||
@@ -807,10 +803,11 @@ otradepost()
 				if (j <= DNDSIZE+2)
 					lprcat("\nSo sorry but we are not authorized to accept that item.");
 			}
+		}
 	}
 }
 
-cnsitm()
+void cnsitm(void)
 {
 	lprcat("\nSorry, we can't accept unidentified objects.");
 }
@@ -818,7 +815,7 @@ cnsitm()
 /*
  *	for the Ularn Revenue Service
  */
-olrs()
+void olrs(void)
 {
 	int i,first;
 	long amt;
@@ -888,13 +885,13 @@ nxt:
 }
 
 
-nomore()
+void nomore(void)
 {
 	lprcat("\nSorry man, I ain't got no more of that shit.");
 	lflush();
 	nap(2200);
 }
-nocash()
+void nocash(void)
 {
 	lprcat("\nWhattaya trying to pull on me? You aint got the cash!");
 	lflush();
@@ -908,7 +905,7 @@ nocash()
 	function to display the header info for the pad
  */
 char drug[5]={0};
-pad_hd()
+void pad_hd(void)
 {
 	clear();
 	lprcat("Hey man, welcome to Dealer McDope's Pad!  I gots the some of the finest shit\n");
@@ -931,7 +928,7 @@ pad_hd()
 	lprcat("Looks like you got about ");
 }
 
-opad()
+void opad(void)
 {
 	int i,flag;
 
@@ -1051,8 +1048,7 @@ opad()
 	} /*end while(1) */
 } /* end pad() */
 
-snag(itm)
-int itm;
+int snag(int itm)
 {
 	int i,limit;
 
@@ -1072,8 +1068,7 @@ int itm;
 	return(0);
 }
 
-pick_char(foo)
-int foo;
+void pick_char(int foo)
 {
 	int i;
 

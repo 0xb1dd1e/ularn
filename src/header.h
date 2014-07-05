@@ -5,6 +5,7 @@
 #include <sys/stat.h>
 #include <sys/param.h>
 #include <sys/times.h>
+#include <time.h>
 
 #ifdef FTIMER
 #  include <sys/timeb.h>

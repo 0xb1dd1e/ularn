@@ -14,7 +14,7 @@
  */
 extern char helpfile[];
 
-help ()
+void help (void)
 {
 	int i,j;
 	char tmbuf[128];	
@@ -55,7 +55,7 @@ help ()
 /*
  *	function to display the welcome message and background
  */
-welcome ()
+void welcome (void)
 {
 	int i;
 	char tmbuf[128];/* intermediate translation buffer when not a VT100 */
@@ -74,7 +74,7 @@ welcome ()
 /*
  *	function to say press return to continue and reset scroll when done
  */
-retcont ()
+void retcont (void)
 {
 	cursor(1,24); 
 	lprcat("Press "); 
@@ -88,7 +88,7 @@ retcont ()
 /*
  *	routine to open the help file and return the first character - '0'
  */
-openhelp ()
+int openhelp (void)
 {
 	if (lopen(helpfile)<0) {
 		lprintf("Can't open help file \"%s\" ",helpfile);

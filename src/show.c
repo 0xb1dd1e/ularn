@@ -9,7 +9,7 @@
 
 	show character's inventory
  */
-showstr()
+void showstr(void)
 {
 	int i,number;
 
@@ -20,7 +20,7 @@ showstr()
 	t_endup(number);
 }
 
-qshowstr()
+void qshowstr(void)
 {
 	int k;
 
@@ -46,8 +46,7 @@ qshowstr()
 /*
  *	subroutine to clear screen depending on # lines to display
  */
-t_setup (count)
-int count;
+void t_setup (int count)
 {
 	if (count<20)  {
 		cl_up(79,count);  
@@ -62,8 +61,7 @@ int count;
 /*
  *	subroutine to restore normal display screen depending on t_setup()
  */
-t_endup (count)
-int count;
+void t_endup (int count)
 {
 	if (count<18)  /* how did we clear the screen? */
 		draws(0,MAXX,0,(count>MAXY) ? MAXY : count);
@@ -76,7 +74,7 @@ int count;
 /*
 	function to show the things player is wearing only
  */
-showwear()
+void showwear()
 {
 	int count, i,j;	
 
@@ -126,7 +124,7 @@ showwear()
 /*
 	function to show the things player can wield only 
  */
-showwield()
+void showwield(void)
 {
 	int i,j,count;
 
@@ -184,7 +182,7 @@ showwield()
 /*
  *	function to show the things player can read only
  */
-showread ()
+void showread (void)
 {
 	int i,j,count;
 
@@ -215,7 +213,7 @@ showread ()
 /*
  *	function to show the things player can eat only
  */
-showeat ()
+void showeat (void)
 {
 	int i,j,count;
 
@@ -244,7 +242,7 @@ showeat ()
 /*
 	function to show the things player can quaff only
  */
-showquaff ()
+void showquaff (void)
 {
 	int i,j,count;
 
@@ -270,10 +268,7 @@ showquaff ()
 	t_endup(count);
 }
 
-show1 (idx, str2, known)
-int idx;
-char *str2[];
-int known[];
+void show1 (int idx, char *str2[], int known[])
 {
  /* standard */
    if (known == 0) {
@@ -300,8 +295,7 @@ int known[];
 	lprintf(" [ %d ]", ivenarg[idx]);
 }
 
-show3 (index)
-int index;
+void show3 (int index)
 {
 	switch(iven[index]) {
 		case OPOTION:	show1(index,potionname,potionknown);  break;

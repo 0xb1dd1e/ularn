@@ -4,8 +4,7 @@
 #include "player.h"
 #include "extern.h"
 
-run (dir)
-int dir;
+void run (int dir)
 {
 	int i;
 	i=1; 
@@ -27,7 +26,7 @@ int dir;
 /*
 	function to wield a weapon
  */
-wield ()	
+void wield (void)	
 {
 	int i;
 
@@ -71,15 +70,13 @@ wield ()
 /*
 	common routine to say you don't have an item
  */
-ydhi (x)
-int x;
+void ydhi (int x)
 { 
 	cursors();  
 	lprintf("\nYou don't have item %c!",x); 
 }
 
-ycwi (x)
-int x;
+void ycwi (int x)
 { 
 	cursors();  
 	lprintf("\nYou can't wield item %c!",x); 
@@ -88,7 +85,7 @@ int x;
 /*
 	function to wear armor
  */
-wear ()
+void wear (void)
 {
 	int i;
 
@@ -154,7 +151,7 @@ wear ()
 /*
 	function to drop an object
  */
-dropobj ()
+void dropobj (void)
 {
 	int i, pitflag=0;
 	char *p;
@@ -227,7 +224,7 @@ dropobj ()
 /*
  *	readscr()		Subroutine to read a scroll one is carrying
  */
-readscr ()
+void readscr (void)
 {
 	int i;
 
@@ -260,18 +257,18 @@ readscr ()
 /*
  *	subroutine to eat a cookie one is carrying
  */
-eatcookie ()
+void eatcookie (void)
 {
-	int i;
-	char *fortune(), *p;
+    int i;
+    char *p;
 
-	while (1) {
+    while (1) {
 	if ((i = whatitem("eat"))==ESC)  
 		return;
-	if (i != '.')
-	    if (i=='*') 
+	if (i != '.') {
+	    if (i=='*') {
 		showeat(); 
-	    else {
+	    } else {
 		if (iven[i-'a']==OCOOKIE) {
 		    lprcat("\nThe cookie was delicious.");
 		    iven[i-'a']=0;
@@ -287,12 +284,13 @@ eatcookie ()
 		lprcat("\nYou can't eat that!");  return;
 	    }
 	}
+    }
 }
 
 /*
  *	subroutine to quaff a potion one is carrying
  */
-quaff ()
+void quaff (void)
 {
 	int i;
 
@@ -319,7 +317,7 @@ quaff ()
 	}
 }
 
-qwhatitem ()
+int qwhatitem (void)
 {
 	int j, i=0;
 	char tmp[IVENSIZE];
@@ -347,8 +345,7 @@ qwhatitem ()
 /*
 	function to ask what player wants to do
  */
-whatitem (str)
-char *str;
+int whatitem (char *str)
 {
 	int j=0, flag=0, i=0;
 	int wld=0, q=0, r=0, w=0, e=0, d=0;
@@ -448,8 +445,7 @@ char *str;
  *	subroutine to get a number from the player
  *	and allow * to mean return amt, else return the number entered
  */
-long readnum (mx)
-long mx;
+long readnum (long mx)
 {
 	int i;
 	long amt=0;
@@ -473,7 +469,7 @@ long mx;
 	return (amt);
 }
 
-do_create()
+void do_create(void)
 {
 	int t, a;
 

@@ -45,8 +45,11 @@
  *
  * Note: ** entries are available only in termcap mode.
  */
+
 #include "header.h"
 #include "extern.h"
+
+#include <term.h>
 
 #define LINBUFSIZE 128		/* size of the lgetw() and lgetl() buffer */
 
@@ -59,11 +62,11 @@ static char lgetwbuf[LINBUFSIZE];	/* get line (word) buffer*/
 /*
  *	getcharacter() 	Routine to read in one character from the terminal
  */
-getcharacter ()
+char getcharacter (void)
 {
 	char byt;
 	lflush();		/* be sure output buffer is flushed */
-/*        byt=getchar();		/* get character from terminal */
+/*        byt=getchar();*/		/* get character from terminal */
 	byt=getc(stdin);
 	return(byt);
 }
@@ -73,7 +76,7 @@ getcharacter ()
  *	newgame() 
  *		Subroutine to save the initial time and seed rnd()
  */
-newgame ()
+void newgame (void)
 {
 	long *p,*pe;
 
@@ -81,7 +84,7 @@ newgame ()
 		;
 	time(&initialtime);
 	srand((unsigned)initialtime);
-	lcreat((char*)0);	/* open buffering for output to terminal */
+	lcreat((char*)NULL);	/* open buffering for output to terminal */
 }
 
 /*
@@ -99,7 +102,7 @@ newgame ()
  */
 /*VARARGS*/
 
-int lprintf(char *fmt, ...)
+void lprintf(char *fmt, ...)
 {
     va_list ap;
 	char *outb,*tmpb;
@@ -158,7 +161,7 @@ int lprintf(char *fmt, ...)
 					break;
 				}
 				if (wide==0)  {
-					while (*outb++ = *tmpb++);
+					while ((*outb++ = *tmpb++));
 					--outb;
 				}
 				else {
@@ -166,7 +169,7 @@ int lprintf(char *fmt, ...)
 					if (left)
 						while (n-- > 0)
 							*outb++ = ' ';
-					while (*outb++ = *tmpb++)
+					while ((*outb++ = *tmpb++))
 						;
 					--outb;
 					if (left==0)
@@ -216,9 +219,7 @@ int lprintf(char *fmt, ...)
  *	Enter with the address and number of bytes to write out
  *	Returns nothing of value
  */
-lwrite (buf, len)
-char *buf;
-int len;
+void lwrite (char *buf, int len)
 {
 	char *str;
 	int num2, write_len;
@@ -251,7 +252,7 @@ int len;
  *
  *  Returns 0 if EOF, otherwise the character
  */
-long lgetc1()
+char lgetc1(void)
 {
 	int i;
 
@@ -280,9 +281,7 @@ long lgetc1()
  *	Reads "number" bytes into the buffer pointed to by "address".
  *	Returns nothing of value
  */
-lrfill (adr, num)
-char *adr;
-int num;
+void lrfill (char *adr, int num)
 {
 	char *pnt;
 	int num2;
@@ -320,7 +319,7 @@ int num;
  *
  *	Returns pointer to a buffer that contains word.  If EOF, returns a 0
  */
-char *lgetw()
+char *lgetw(void)
 {
 	char *lgp;
 	int cc, n=LINBUFSIZE, quote=0;
@@ -353,7 +352,7 @@ char *lgetw()
  *
  *Returns pointer to a buffer that contains the line.  If EOF, returns 0
  */
-char *lgetl()
+char *lgetl(void)
 {
 	int i=LINBUFSIZE,ch;
 	char *str=lgetwbuf;
@@ -378,8 +377,7 @@ char *lgetl()
  *	lcreat((char*)0); means to the terminal
  *	Returns -1 if error, otherwise the file descriptor opened.
  */
-lcreat(str)
-char *str;
+int lcreat(char *str)
 {
 	lpnt = lpbuf;
 	lpend = lpbuf+BUFSIZ;
@@ -402,8 +400,7 @@ char *str;
  *	lopen(0) means from the terminal
  *	Returns -1 if error, otherwise the file descriptor opened.
  */
-lopen (str)
-char *str;
+int lopen (char *str)
 {
 	ipoint = iepoint = BUFSIZ;
 	if (str==(char *)0)
@@ -425,8 +422,7 @@ char *str;
  *	lappend(0) means to the terminal
  *	Returns -1 if error, otherwise the file descriptor opened.
  */
-lappend (str)
-char *str;
+int lappend (char *str)
 {
 	lpnt = lpbuf;
 	lpend = lpbuf+BUFSIZ;
@@ -448,7 +444,7 @@ char *str;
  *
  *	Returns nothing of value.
  */
-lrclose()
+void lrclose(void)
 {
 	if (fd > 0)
 		close(fd);
@@ -459,7 +455,7 @@ lrclose()
  *
  *	Returns nothing of value.
  */
-lwclose ()
+void lwclose (void)
 {
 	lflush();
 	if (lfd > 2)
@@ -470,15 +466,14 @@ lwclose ()
  *	lprcat(string)			append a string to the output buffer
  *					avoids calls to lprintf (time consuming)
  */
-lprcat (str)
-char *str;
+void lprcat (char *str)
 {
 	char *str2;
 
 	if (lpnt >= lpend)
 		lflush();
 	str2 = lpnt;
-	while (*str2++ = *str++)
+	while ((*str2++ = *str++))
 		;
 	lpnt = str2 - 1;
 }
@@ -499,20 +494,26 @@ char *HO, *BC, *UP;
 /*
  * init_term()		Terminal initialization -- setup termcap info
  */
-init_term ()
+void init_term (void)
 {
 	char termbuf[1024];
 	char *pc, *capptr = cap+10;
-	char *tgetstr(), *term, *getenv();
+	char *term;
 
-	switch (tgetent(termbuf, term = getenv("TERM"))) {
+	term = getenv("TERM");
+	if (term == (char *)NULL) {
+		fprintf(stderr, "Please set your TERM.\n");
+		exit(1);
+	}
+
+	switch (tgetent(termbuf, term)) {
 	case -1:
 		fprintf(stderr, "Cannot open termcap file.\n");
 		exit(1);
 	case 0:
 		fprintf(stderr, "Cannot find termcap entry for %s\n", term);
 		exit(1);
-	};
+	}
 
 	SO = tgetstr("so", &capptr);  /* Begin standout mode */
 	SE = tgetstr("se", &capptr);  /* End standout mode */
@@ -525,8 +526,8 @@ init_term ()
 	UP = tgetstr("up", &capptr);	/* cursor up */
 	HO = tgetstr("ho", &capptr);	/* home cursor */
 
-/*	if (pc = tgetstr("pc", &capptr)) /* padding character */
-/*		PC = pc;
+/*	if (pc = tgetstr("pc", &capptr)) *//* padding character */
+/*		PC = pc; */
 /*
 	else
 		*PC = '\0';
@@ -573,8 +574,7 @@ init_term ()
 /*
  * cl_up(x,y) Clear screen from [x,1] to current position. Leave cursor at [x,y]
  */
-cl_up (x,y)
-int x, y;
+void cl_up (int x, int y)
 {
 	int i;
 
@@ -589,8 +589,7 @@ int x, y;
 /*
  * cl_dn(x,y) 	Clear screen from [1,y] to end of display. Leave cursor at [x,y]
  */
-cl_dn (x,y)
-int x, y;
+void cl_dn (int x, int y)
 {
 	int i;
 
@@ -612,8 +611,7 @@ int x, y;
 /*
  * standout(str)  Print the argument string in inverse video (standout mode).
  */
-standout (str)
-char *str;
+void standout (char *str)
 {
 	if (boldon == 0) {
 		lprcat(str);
@@ -628,7 +626,7 @@ char *str;
 /*
  * set_score_output() 	Called when output should be literally printed.
  */
-set_score_output() {
+void set_score_output(void) {
 	enable_scroll = -1;
 }
 
@@ -641,7 +639,7 @@ set_score_output() {
  */
 static int scrline=18; /* line # for wraparound instead of scrolling if no DL */
 
-lflush ()
+void lflush (void)
 {
 	int lpoint;
 	char *str;
@@ -737,18 +735,18 @@ static int ind=0;
 /*
  * putcharacter(c)		Print one character in decoded output buffer.
  */
-putcharacter(c)
-int c;
+int putcharacter(int c)
 {
-	outbuf[ind++]=c;
+	outbuf[ind++]=(char)c;
 	if(ind>=BUFSIZ)
 		flush_buf();
+	return(0);
 }
 
 /*
  * flush_buf()			Flush buffer with decoded output.
  */
-flush_buf()
+void flush_buf(void)
 {
 	int write_len;
 	
@@ -768,8 +766,7 @@ flush_buf()
  *
  *
  */
-tmcapcnv(sd,ss)
-char *sd, *ss;
+void tmcapcnv(char *sd, char *ss)
 {
 	int tmstate=0;	/* 0=normal, 1=ESC 2=[ 3=# */
 	char tmdigit=0;	/* the # in \33[#m */
@@ -833,9 +830,7 @@ br:
 }
 
 
-char *
-getword(buf)
-char *buf;
+char *getword(char *buf)
 {
 	char c;
 	static char s[80];

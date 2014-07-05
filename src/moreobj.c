@@ -19,7 +19,7 @@
  *	******
  *
  */
-oaltar()
+void oaltar(void)
 {
 	long k;
 	int  p;
@@ -65,7 +65,7 @@ start:
 				}
 
 				c[GOLD] -= k;
-				if (k < (c[GOLD]+k)/10 || k < rnd(50) && !wizard) {
+				if ((k < (c[GOLD]+k)/10 || k < rnd(50)) && !wizard) {
 					createmonster(makemonst(level+2));
 					c[AGGRAVATE] += 500;
 					bottomline();
@@ -121,7 +121,7 @@ start:
 /*
 	function to cast a +3 protection on the player
  */
-ohear()
+void ohear(void)
 {
 	lprcat("\nYou have been heard!");
 	if (c[ALTPRO]==0) 
@@ -136,8 +136,7 @@ ohear()
  *	*******
  *
  */
-othrone(arg)
-int arg;
+void othrone(int arg)
 {
 	int i,k;
 
@@ -186,7 +185,7 @@ int arg;
 	} /* NOTREACHED */
 }
 
-odeadthrone()
+void odeadthrone(void)
 {
 	int k;
 
@@ -220,7 +219,7 @@ odeadthrone()
  *	******
  *
  */
-ochest()
+void ochest(void)
 {
 	int i,k;
 
@@ -289,7 +288,7 @@ ochest()
  *	OFOUNTAIN
  *	*********
  */
-ofountain()
+void ofountain(void)
 {
 	int x;
 
@@ -368,8 +367,7 @@ ofountain()
 	a subroutine to raise or lower character levels
 	if how > 0 they are raised   if how < 0 they are lowered
  */
-fntchange(how)
-int how;
+void fntchange(int how)
 {
 	long j;
 
@@ -447,9 +445,7 @@ int how;
  *
  *	process an up/down of a character attribute for ofountain
  */
-fch(how,x)
-int how;
-long *x;
+void fch(int how, long *x)
 {
 	if (how < 0 )	 { 	
 		if (*x > 3) {

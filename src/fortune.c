@@ -9,8 +9,7 @@ static char **flines=NULL;	/* array of pointers to each fortune */
 static int fortune_fd=0;	/* true if we have loaded the fortune info */
 static int nlines=0;	/* # lines in fortune database */
 
-char *fortune(file)
-char *file;
+char *fortune(char *file)
 {
 	char *p;
 	int lines,tmp;
@@ -20,7 +19,7 @@ char *file;
 	if (fortune_fd==0) {
 		/* open the file */
 		if ((fortune_fd=open(file,O_RDONLY)) < 0)	
-			return(0); /* can't find file */
+			return((char *)NULL); /* can't find file */
 
 		/* find out how big fortune file is and get memory for it */
 		retval = fstat(fortune_fd,&stat);
@@ -29,7 +28,7 @@ char *file;
 			close(fortune_fd); 
 			fortune_fd= -1; 
 			if (base) free(base); 
-			return(0); 	/* can't stat file */
+			return((char *)NULL); 	/* can't stat file */
 		}
 
 		/* read in the entire fortune file */
@@ -38,7 +37,7 @@ char *file;
 			close(fortune_fd); 
 			fortune_fd= -1; 
 			if (base) free(base); 
-			return(0); 	/* can't read file */
+			return((char *)NULL); 	/* can't read file */
 		}
 		close(fortune_fd);  
 		base[stat.st_size] = 0 ; /* final NULL termination */
@@ -56,7 +55,7 @@ char *file;
 		     == (char **)NULL) {
 			if (base) free(base); 
 			fortune_fd= -1; 
-			return(0); /* malloc() failure */
+			return((char *)NULL); /* malloc() failure */
 		}
 
 		/* now assign each pointer to a line */
@@ -70,5 +69,5 @@ char *file;
 	if (fortune_fd > 2)	/* if we have a database to look at */
 		return(flines[rund((nlines<=0)?1:nlines)]);
 	else 
-	    return(0);
+	    return((char *)NULL);
 }

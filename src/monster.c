@@ -88,8 +88,7 @@ struct isave {			/* used for alter reality spell */
  *
  * Enter with the monster number (1 to MAXMONST+8) Returns no value. 
  */
-createmonster(mon)
-int             mon;
+void createmonster(int mon)
 {
 	int             x, y, k, i;
 
@@ -133,8 +132,7 @@ int             mon;
  * check for no monster at this location This routine will return FALSE if at
  * a wall or the dungeon exit on level 1 
  */
-cgood(x, y, itm, monst)
-	int             x, y, itm, monst;
+int cgood(int x, int y, int itm, int monst)
 {
 	if ((y >= 0) && (y <= MAXY - 1)
 	    && (x >= 0) && (x <= MAXX - 1))	/* within bounds? */
@@ -156,8 +154,7 @@ cgood(x, y, itm, monst)
  * value, thus we don't know about createitem() failures. 
  *
  */
-createitem(x, y, it, arg)
-int             x,y, it, arg;
+void createitem(int x, int y, int it, int arg)
 {
 	int             k, i;
 
@@ -230,7 +227,7 @@ int             x,y, it, arg;
  */
 static char     eys[] = "\nEnter your spell: ";
 
-cast()
+void cast(void)
 {
 	int             i, j, a, b, d;
 
@@ -249,11 +246,11 @@ cast()
 		if (a == ESC)
 			goto over;	/* to escape casting a spell	 */
 		lprc(a);
-		lflush;
+		lflush();
 		if ((b = getcharacter()) == ESC)
 			goto over;	/* to escape casting a spell */
 		lprc(b);
-		lflush;
+		lflush();
 		if ((d = getcharacter()) == ESC) {
 over:
 			lprcat("aborted.");
@@ -281,8 +278,7 @@ over:
  * Enter with the spell number, returns no value. Please insure that there are 2
  * spaces before all messages here 
  */
-speldamage(x)
-int             x;
+void speldamage(int x)
 {
 	int             i, j, clev;
 	int             xl, xh, yl, yh;
@@ -689,7 +685,7 @@ ws:
  * > 3 
  *
  */
-loseint()
+void loseint(void)
 {
 	if (--c[INTELLIGENCE] < 3)
 		c[INTELLIGENCE] = 3;
@@ -701,7 +697,7 @@ loseint()
  * This routine prints out a message saying "You can't aim your magic!" returns
  * 0 if not confused, non-zero (time remaining confused) if confused 
  */
-isconfuse()
+int isconfuse(void)
 {
 	if (c[CONFUSE]) {
 		lprcat(" You can't aim your magic!");
@@ -718,8 +714,7 @@ isconfuse()
  * returns 0 Enter with the spell number in x, and the monster number in
  * monst. 
  */
-nospell(x, monst)
-	int             x, monst;
+int nospell(int x, int monst)
 {
 	int             tmp;
 
@@ -742,8 +737,7 @@ nospell(x, monst)
  * Function to return hp damage to monster due to a number of full hits Enter
  * with the number of full hits being done 
  */
-fullhit(xx)
-	int             xx;
+int fullhit(int xx)
 {
 	int             i;
 
@@ -765,9 +759,7 @@ fullhit(xx)
  * the spell number in spnum, the damage to be done in dam, lprintf format
  * string in str, and lprintf's argument in arg. Returns no value. 
  */
-direct(spnum, dam, str, arg)
-	int             spnum, dam, arg;
-	char           *str;
+void direct(int spnum, int dam, char *str, int arg)
 {
 	int             x, y;
 	int             m;
@@ -827,9 +819,7 @@ direct(spnum, dam, str, arg)
  * str, the # of milliseconds to delay between locations in delay, and the
  * character to represent the weapon in cshow. Returns no value. 
  */
-godirect(spnum, dam, str, delay, cshow)
-int             spnum, dam, delay;
-char           *str, cshow;
+void godirect(int spnum, int dam, char *str, int delay, char cshow)
 {
 	char          *it;
 	int             x, y, m;
@@ -972,8 +962,7 @@ char           *str, cshow;
  * Subroutine to copy the word "monster" into lastmonst if the player is blind.
  * Enter with the coordinates (x,y) of the monster Returns no value. 
  */
-ifblind(x, y)
-	int             x, y;
+void ifblind(int x, int y)
 {
 	char           *s;
 
@@ -994,8 +983,7 @@ ifblind(x, y)
  * Routine to ask for a direction to a spell and then teleport away monster
  * Enter with the spell number that wants to teleport away Returns no value. 
  */
-tdirect(spnum)
-	int             spnum;
+void tdirect(int spnum)
 {
 	int             x, y;
 	int             m;
@@ -1019,8 +1007,7 @@ tdirect(spnum)
 }
 
 
-makewall(spnum)
-	int             spnum;
+void makewall(int spnum)
 {
 	int             x, y;
 
@@ -1030,7 +1017,7 @@ makewall(spnum)
 		return;
 	dirsub(&x, &y);
 
-	if ((y >= 0) && (y <= MAXY - 1) && (x >= 0) && (x <= MAXX - 1))	/* within bounds? */
+	if ((y >= 0) && (y <= MAXY - 1) && (x >= 0) && (x <= MAXX - 1)) {	/* within bounds? */
 		if (item[x][y] != OWALL) {	/* can't make anything on
 						 * walls */
 			if (item[x][y] == 0) {	/* is it free of items? */
@@ -1040,14 +1027,19 @@ makewall(spnum)
 						item[x][y] = OWALL;
 						know[x][y] = 1;
 						show1cell(x, y);
-					} else
+					} else {
 						lprcat("\nyou can't make a wall there!");
-				} else
+					}
+				} else {
 					lprcat("\nthere's a monster there!");
-			} else
+				}
+			} else {
 				lprcat("\nthere's something there already!");
-		} else
+			}
+		} else {
 			lprcat("\nthere's a wall there already!");
+		}
+	}
 }
 
 /*
@@ -1059,9 +1051,7 @@ makewall(spnum)
  * the spell number in sp, the damage done to wach square in dam, and the
  * lprintf string to identify the spell in str. Returns no value. 
  */
-omnidirect(spnum, dam, str)
-	int             spnum, dam;
-	char           *str;
+void omnidirect(int spnum, int dam, char *str)
 {
 	int             x, y, m;
 
@@ -1069,7 +1059,7 @@ omnidirect(spnum, dam, str)
 		return;		/* bad args */
 	for (x = playerx - 1; x < playerx + 2; x++)
 		for (y = playery - 1; y < playery + 2; y++) {
-			if ((m = mitem[x][y].mon) != 0)
+			if ((m = mitem[x][y].mon) != 0) {
 				if (nospell(spnum, m) == 0) {
 					ifblind(x, y);
 					cursors();
@@ -1081,6 +1071,7 @@ omnidirect(spnum, dam, str)
 					lasthx = x;
 					lasthy = y;
 				}
+			}
 		}
 }
 
@@ -1092,8 +1083,7 @@ omnidirect(spnum, dam, str)
  * with the origination coordinates in (x,y). Returns index into diroffx[]
  * (0-8). 
  */
-dirsub(x, y)
-	int            *x, *y;
+int dirsub(int *x, int *y)
 {
 	int             i;
 
@@ -1135,8 +1125,7 @@ out:
  * level. Returns TRUE if it was out of bounds, and the *x & *y in the
  * calling routine are affected. 
  */
-verifyxy(x, y)
-int            *x, *y;
+int verifyxy(int *x, int *y)
 {
 	int             flag = 0;
 
@@ -1167,8 +1156,7 @@ int            *x, *y;
  * Subroutine to polymorph a monster and ask for the direction its in Enter with
  * the spell number in spmun. Returns no value. 
  */
-dirpoly(spnum)
-	int             spnum;
+void dirpoly(int spnum)
 {
 	int             x, y, m;
 
@@ -1201,8 +1189,7 @@ dirpoly(spnum)
  * This routine is used for a bash & slash type attack on a monster Enter with
  * the coordinates of the monster in (x,y). Returns no value. 
  */
-hitmonster(x, y)
-int             x, y;
+void hitmonster(int x, int y)
 {
 	int             tmp, monst, damag, flag;
 
@@ -1238,7 +1225,7 @@ int             x, y;
 	 *  If the monser was hit, deal with weapon dulling.
 	 */
 	if (flag && (monst==RUSTMONSTER || monst==DISENCHANTRESS || monst==CUBE)
-		&& c[WIELD] > 0)
+		&& c[WIELD] > 0) {
 		/* if it's not already dulled to hell */
 		if (((ivenarg[c[WIELD]] > -10) &&
 			 ((iven[c[WIELD]] == OSLAYER) ||
@@ -1262,6 +1249,7 @@ int             x, y;
 			c[WIELD] = -1;
 			flag = 0; /* Didn't hit after all... */
 		}
+	}
 
 	if (flag) {
 		hitm(x, y, damag);
@@ -1287,8 +1275,7 @@ int             x, y;
  * specifically damage a monster at a location (x,y) Called by
  * hitmonster(x,y) 
  */
-hitm(x, y, amt)
-int x, y, amt;
+int hitm(int x, int y, int amt)
 {
 	int             monst;
 	int             hpoints, amt2;
@@ -1382,8 +1369,7 @@ int x, y, amt;
  *	Function for the monster to hit the player with monster at location x,y
  *	Returns nothing of value.
  */
-hitplayer (x, y)
-int x, y;
+void hitplayer (int x, int y)
 {
 	register int dam,tmp,mster,bias;
 
@@ -1478,9 +1464,7 @@ int x, y;
  *	Enter with the monster number 
  *	Returns nothing of value.
  */
-dropsomething (x,y,monst)
-int x,y;
-int monst;
+void dropsomething (int x, int y, int monst)
 {
 	switch(monst) {
 	case ORC:  
@@ -1508,8 +1492,7 @@ int monst;
  *
  * Enter with the number of gold pieces to drop Returns nothing of value. 
  */
-dropgold(amount)
-int amount;
+void dropgold(int amount)
 {
 	if (amount > 250)
 		createitem(playerx, playery, OMAXGOLD, (long) amount);
@@ -1525,8 +1508,7 @@ int amount;
  * with the cave level on which something is to be dropped Returns nothing of
  * value. 
  */
-something(x,y,lev)
-int x,y,lev;
+void something(int x, int y, int lev)
 {
 	int j, i;
 
@@ -1557,8 +1539,7 @@ static char     nobjtab[] = {
 		OSPEAR, OBELT, ORING, OSTUDLEATHER, OSHIELD, OFLAIL, OCHAIN,
 			     O2SWORD, OPLATE, OLONGSWORD};	/* 38 */
 
-newobject(lev, i)
-int             lev, *i;
+int newobject(int lev, int *i)
 {
 int             tmp = 32, j;
 
@@ -1695,8 +1676,7 @@ static short    rustarm[ARMORTYPES][2] = {
 
 static char     spsel[] = {1, 2, 3, 5, 6, 8, 9, 11, 13, 14};
 
-spattack(x, xx, yy)
-int             x, xx, yy;
+int spattack(int x, int xx, int yy)
 {
 	int             i, j = 0, k, m;
 	char           *p = 0;
@@ -1706,12 +1686,14 @@ int             x, xx, yy;
 	/*
 	 * cancel only works 5% of time for demon prince and god 
 	 */
-	if (c[CANCELLATION])
+	if (c[CANCELLATION]) {
 		if (mitem[xx][yy].mon >= DEMONPRINCE) {
 			if (rnd(100) >= 95)
 				return (0);
-		} else
+		} else {
 			return (0);
+		}
+	}
 
 	/* staff of power cancels demonlords/wraiths/vampires 75% of time */
 	/* lucifer is unaffected */
@@ -1934,8 +1916,7 @@ spout3:
  * Enter with the number of hit points to lose Note: if x > c[HP] this routine
  * could kill the player! 
  */
-checkloss(x)
-	int             x;
+void checkloss(int x)
 {
 	if (x > 0) {
 		losehp(x);
@@ -1950,16 +1931,16 @@ checkloss(x)
  * Gives player experience, but no dropped objects Returns the experience gained
  * from all monsters killed 
  */
-annihilate()
+void annihilate(void)
 {
 	int             i, j;
 	long            k;
 	char          *p;
 
-	for (k = 0, i = playerx - 1; i <= playerx + 1; i++)
-	    for (j = playery - 1; j <= playery + 1; j++)
-		if (!verifyxy(&i, &j))	/* if not out of bounds */
-		    if (*(p = &mitem[i][j].mon))	/* if a monster there */
+	for (k = 0, i = playerx - 1; i <= playerx + 1; i++) {
+	    for (j = playery - 1; j <= playery + 1; j++) {
+		if (!verifyxy(&i, &j)) {	/* if not out of bounds */
+		    if (*(p = &mitem[i][j].mon)) {	/* if a monster there */
 			if (*p < DEMONLORD) {
 				k += monster[*p].experience;
 				*p = know[i][j] = 0;
@@ -1969,6 +1950,10 @@ annihilate()
 				/* lose half hit points */
 				hitp[i][j] = (hitp[i][j] >> 1) + 1;
 			}
+		    }
+		}
+	    }
+	}
 	if (k > 0) {
 		lprcat("\nYou hear loud screams of agony!");
 		raiseexperience((long) k);
@@ -1980,17 +1965,17 @@ annihilate()
  *
  * This is done by setting a flag in the monster[] structure 
  */
-genmonst()
+void genmonst(void)
 {
 	int  i, j;
 
 	cursors();
 	lprcat("\nGenocide which monster? ");
-	for (i = 0; (!isalpha(i)) && (i != ' ');
-	     i = getcharacter());
+	for (i = 0; (!isalpha(i)) && (i != ' '); i = getcharacter())
+		;
 	lprc(i);
-	for (j = 0; j < MAXMONST; j++)	/* search for the monster type */
-	    if (monstnamelist[j] == i)	/* have we found it? */
+	for (j = 0; j < MAXMONST; j++) {	/* search for the monster type */
+	    if (monstnamelist[j] == i) {	/* have we found it? */
 		if ((monster[j].flags & FL_GENOCIDED) == 0 || wizard) {
 			monster[j].flags |= FL_GENOCIDED;  /* genocided from game */
 			lprintf("  There will be no more %ss.", monster[j].name);
@@ -2000,6 +1985,8 @@ genmonst()
 			bot_linex();
 			return;
 		}
+	    }
+	}
 	lprcat("  You sense failure!");
 }
 
@@ -2009,8 +1996,7 @@ genmonst()
  * function to return monster number for a randomly selected monster for the
  * given cave level	 
  */
-makemonst(lev)
-int             lev;
+int makemonst(int lev)
 {
 	int             tmp, x;
 
@@ -2041,7 +2027,7 @@ int             lev;
 /*
 	subroutine to randomly create monsters if needed
  */
-randmonst ()
+void randmonst (void)
 {	/*	don't make monsters if time is stopped	*/
 	if (c[TIMESTOP]) 
 		return;

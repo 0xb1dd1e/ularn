@@ -2,7 +2,7 @@
 #include "header.h"			
 #include "extern.h"			
 
-s2choose()	/* text to be displayed if ^C during intro screen */
+void s2choose(void)	/* text to be displayed if ^C during intro screen */
 {
 	cursor(1,24); 
 	lprcat("Press "); 
@@ -51,8 +51,7 @@ sgam(int x)
 
 #ifdef SIGTSTP
 RETSIGTYPE
-tstop(sig)
-int sig;
+tstop(int sig)
 {
     if (sig == SIGTSTP) {
 	if (nosignal)   {
@@ -89,7 +88,7 @@ int sig;
 static RETSIGTYPE 	(*intsave)(),
 		(*quitsave)();
 void
-sigsetup()
+sigsetup(void)
 {
 	RETSIGTYPE tstop();
 	signal(SIGHUP,  sgam);
@@ -97,7 +96,7 @@ sigsetup()
 	signal(SIGQUIT, cntlc); 		
  	signal(SIGILL,  sigpanic);
 	signal(SIGTRAP, sigpanic);
-#ifndef CYGWIN
+#ifdef SIGIOT
 	signal(SIGIOT,  sigpanic);		
 #endif
 #ifdef SIGEMT
@@ -115,14 +114,14 @@ sigsetup()
 }
 
 void
-sigsave()
+sigsave(void)
 {
 	signal(SIGHUP,  SIG_DFL);
 	intsave  = signal(SIGINT,  SIG_DFL); 
 	quitsave = signal(SIGQUIT, SIG_DFL); 		
  	signal(SIGILL,  SIG_DFL);
 	signal(SIGTRAP, SIG_DFL);
-#ifndef CYGWIN
+#ifdef SIGIOT
 	signal(SIGIOT,  SIG_DFL);		
 #endif
 #ifdef SIGEMT
@@ -140,14 +139,14 @@ sigsave()
 }
 
 void
-sigreset() 
+sigreset(void) 
 {
 	signal(SIGHUP,  sgam);
 	signal(SIGINT,  intsave);
 	signal(SIGQUIT, quitsave); 		
 	signal(SIGILL,  sigpanic);
 	signal(SIGTRAP, sigpanic);
-#ifndef CYGWIN
+#ifdef SIGIOT
 	signal(SIGIOT,  sigpanic);		
 #endif
 #ifdef SIGEMT
@@ -192,8 +191,7 @@ static char *signame[NSIG] = {
  *	routine to process a fatal error signal
  */
 RETSIGTYPE
-sigpanic(sig)
-int sig;
+sigpanic(int sig)
 {
 	clearvt100();
 	if (tempfilename)
@@ -202,7 +200,7 @@ int sig;
 	if (signame[sig])
 		fprintf(stderr, " [%s]\n",signame[sig]);
 	sleep(2);
-#ifndef CYGWIN
+#ifdef SIGIOT
 	if (sig == SIGBUS || sig == SIGSEGV || sig == SIGIOT
 	) {
 		signal(SIGIOT, SIG_DFL);

@@ -123,7 +123,7 @@ short lastnum=0;		/* the number of the monster last hitting player, or */
 
 char item[MAXX][MAXY];		/*	objects in maze if any	*/
 char know[MAXX][MAXY];		/*	1 or 0 if here before	*/
-/*char mitem[MAXX][MAXY];		/*	monster item array 	*/
+/*char mitem[MAXX][MAXY];*/		/*	monster item array 	*/
 char moved[MAXX][MAXY];		/*	monster movement flags  */
 char stealth[MAXX][MAXY];	/*  0=sleeping 1=awake monst    */
 char iven[IVENSIZE];		/*	inventory for player	*/
@@ -160,7 +160,7 @@ char char_picked;	/* the character chosen */
 char enable_scroll=0;	/* constant for enabled/disabled scrolling regn */
 
 
-long initialtime=0;		/* time playing began 	*/
+time_t initialtime=0;		/* time playing began 	*/
 long gtime=0;			/* the clock for the game	*/
 long outstanding_taxes=0;	/* present tax bill from score file	*/
 long c[100],cbak[100];		/* the character description arrays*/
