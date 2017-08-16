@@ -531,8 +531,8 @@ void showplayer(void)
  * players when walking into walls) if player walks off screen or into wall
  *
  */
-char diroffx[] = { 0,  0, 1,  0, -1,  1, -1, 1, -1 };
-char diroffy[] = { 0,  1, 0, -1,  0, -1, -1, 1,  1 };
+short diroffx[] = { 0,  0, 1,  0, -1,  1, -1, 1, -1 };
+short diroffy[] = { 0,  1, 0, -1,  0, -1, -1, 1,  1 };
 
 int moveplayer(int dir)
 	/*	from = present room #  direction = [1-north]
